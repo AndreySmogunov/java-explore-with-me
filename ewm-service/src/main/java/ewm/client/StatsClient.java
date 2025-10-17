@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import stats.dto.HitDto;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,9 +24,7 @@ public class StatsClient {
                 .build();
     }
 
-    public ResponseEntity<HitDto> saveHit(HitDto hitDto) {
-        return rest.postForEntity("/hit", hitDto, HitDto.class);
-    }
+
 
     public ResponseEntity<List> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
         StringBuilder uriBuilder = new StringBuilder("/stats?start={start}&end={end}&unique={unique}");
