@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@AutoConfigureMockMvc
 public class StatsClientTest {
 
     @Autowired
