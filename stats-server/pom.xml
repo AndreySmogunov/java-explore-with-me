@@ -13,6 +13,10 @@
     <name>Stats Server</name>
     <description>Service for collecting and analyzing statistics</description>
 
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+
     <dependencies>
         <!-- Spring Boot Starter Web -->
         <dependency>
@@ -85,6 +89,9 @@
                     <includes>
                         <include>**/*Test.java</include>
                     </includes>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
                 </configuration>
             </plugin>
         </plugins>
@@ -107,7 +114,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-checkstyle-plugin</artifactId>
-                        <version>3.3.0</version>
                         <executions>
                             <execution>
                                 <goals>
