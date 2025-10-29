@@ -8,7 +8,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -19,16 +18,6 @@ public class StatsClient {
         this.restTemplate = builder
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
                 .build();
-    }
-
-    public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        Map<String, Object> parameters = Map.of(
-                "start", start,
-                "end", end,
-                "uris", uris,
-                "unique", unique
-        );
-        return restTemplate.getForEntity("/stats?start={start}&end={end}&uris={uris}&unique={unique}", Object.class, parameters);
     }
 
     public ResponseEntity<Object> saveHit(String app, String uri, String ip, LocalDateTime timestamp) {

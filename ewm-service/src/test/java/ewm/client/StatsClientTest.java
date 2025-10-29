@@ -6,8 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -16,18 +14,6 @@ public class StatsClientTest {
 
     @Autowired
     private StatsClient statsClient;
-
-    @Test
-    public void testGetStats() {
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now();
-        List<String> uris = Arrays.asList("/uri1", "/uri2");
-        boolean unique = false;
-
-        ResponseEntity<Object> response = statsClient.getStats(start, end, uris, unique);
-
-        assertNotNull(response);
-    }
 
     @Test
     public void testSaveHit() {
