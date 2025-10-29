@@ -10,15 +10,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface StatsRepository extends JpaRepository<Hit, Long> {
-    @Query("SELECT h.app as app, h.uri as uri, COUNT(h.ip) as hits FROM Hit h " +
+
+    @Query("SELECT new stats.dto.StatsDto(h.app, h.uri, COUNT(h.ip)) " +
+            "FROM Hit h " +
             "WHERE h.timestamp BETWEEN :start AND :end " +
-            "GROUP BY h.app, h.uri " +
-            "ORDER BY hits DESC")
+            "GROUP BY h.app, h.uri")
     List<StatsDto> findStats(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
-    @Query("SELECT h.app as app, h.uri as uri, COUNT(DISTINCT h.ip) as hits FROM Hit h " +
+    @Query("SELECT new stats.dto.StatsDto(h.app, h.uri, COUNT(DISTINCT h.ip)) " +
+            "FROM Hit h " +
             "WHERE h.timestamp BETWEEN :start AND :end " +
-            "GROUP BY h.app, h.uri " +
-            "ORDER BY hits DESC")
+            "GROUP BY h.app, h.uri")
     List<StatsDto> findUniqueStats(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }

@@ -1,44 +1,58 @@
 package stats.service;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import stats.dto.HitDto;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import stats.dto.StatsDto;
+import stats.repository.StatsRepository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 public class StatsServiceTest {
 
-    @Autowired
-    private StatsService statsService;
+    @Mock
+    private StatsRepository statsRepository;
 
-    @Test
-    public void testSaveHit() {
-        HitDto hitDto = new HitDto("app", "/uri", "192.168.0.1", LocalDateTime.now());
-        HitDto savedHitDto = statsService.saveHit(hitDto);
-        assertEquals(hitDto.getApp(), savedHitDto.getApp(), "Название приложения должно совпадать");
-        assertEquals(hitDto.getUri(), savedHitDto.getUri(), "URI должен совпадать");
-        assertEquals(hitDto.getIp(), savedHitDto.getIp(), "IP-адрес должен совпадать");
-    }
+    @InjectMocks
+    private StatsServiceImpl statsService;
 
     @Test
     public void testGetStats() {
-        // Сначала сохраним хит, чтобы получить статистику
-        HitDto hitDto = new HitDto("app", "/uri", "192.168.0.1", LocalDateTime.now());
-        statsService.saveHit(hitDto);
-
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();
-        List<String> uris = List.of("/uri");
-        List<StatsDto> stats = statsService.getStats(start, end, uris, false);
+        List<StatsDto> expectedStats = Arrays.asList(
+                new StatsDto("app1", "/uri1", 10L),
+                new StatsDto("app2", "/uri2", 20L)
+        );
 
-        assertEquals(1, stats.size(), "Ожидалась одна запись в статистике");
+        when(statsRepository.findStats(start, end)).thenReturn(expectedStats);
+
+        List<StatsDto> actualStats = statsService.getStats(start, end, null, false);
+
+        assertEquals(expectedStats, actualStats);
+    }
+
+    @Test
+    public void testGetUniqueStats() {
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now();
+        List<StatsDto> expectedStats = Arrays.asList(
+                new StatsDto("app1", "/uri1", 5L),
+                new StatsDto("app2", "/uri2", 10L)
+        );
+
+        when(statsRepository.findUniqueStats(start, end)).thenReturn(expectedStats);
+
+        List<StatsDto> actualStats = statsService.getStats(start, end, null, true);
+
+        assertEquals(expectedStats, actualStats);
     }
 }

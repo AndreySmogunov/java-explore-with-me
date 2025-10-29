@@ -2,9 +2,10 @@ package stats.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import stats.dto.HitDto;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import stats.dto.StatsDto;
 import stats.service.StatsService;
 
@@ -12,17 +13,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
+@RequestMapping("/stats")
 @RequiredArgsConstructor
 public class StatsController {
+
     private final StatsService statsService;
 
-    @PostMapping("/hit")
-    @ResponseStatus(HttpStatus.CREATED)
-    public HitDto saveHit(@RequestBody HitDto hitDto) {
-        return statsService.saveHit(hitDto);
-    }
-
-    @GetMapping("/stats")
+    @GetMapping
     public List<StatsDto> getStats(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime start,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime end,
