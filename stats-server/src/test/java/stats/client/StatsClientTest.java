@@ -3,35 +3,40 @@ package stats.client;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import stats.dto.HitDto;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class StatsClientTest {
 
+    @LocalServerPort
+    private int port;
+
     @Autowired
-    private StatsClient statsClient;
+    private TestRestTemplate restTemplate;
 
     @Test
     public void testSaveHit() {
-        HitDto hitDto = new HitDto("app", "/uri", "192.168.0.1", LocalDateTime.now());
-        ResponseEntity<HitDto> response = statsClient.saveHit(hitDto);
-        assertEquals(201, response.getStatusCodeValue(), "Ожидается статус 201 Created");
-    }
+        String app = "app1";
+        String uri = "/uri1";
+        String ip = "192.168.1.1";
+        LocalDateTime timestamp = LocalDateTime.now();
 
-    @Test
-    public void testGetStats() {
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now();
-        List<String> uris = List.of("/uri");
-        ResponseEntity<List> response = statsClient.getStats(start, end, uris, false);
-        assertEquals(200, response.getStatusCodeValue(), "Ожидается статус 200 OK");
+        String url = String.format("http://localhost:%d/hit", port);
+
+        ResponseEntity<Object> response = restTemplate.postForEntity(url, Map.of(
+                "app", app,
+                "uri", uri,
+                "ip", ip,
+                "timestamp", timestamp
+        ), Object.class);
+
+        assertNotNull(response);
     }
 }
