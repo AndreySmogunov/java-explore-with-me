@@ -1,9 +1,9 @@
-package stats.service;
+package ru.practicum.stats.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import stats.dto.StatsDto;
-import stats.repository.StatsRepository;
+import ru.practicum.stats.dto.StatsDto;
+import ru.practicum.stats.repository.StatsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;

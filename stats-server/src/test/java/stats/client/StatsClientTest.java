@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
-import stats.StatsApplication;
+import ru.practicum.stats.StatsApplication;
 
 import java.time.LocalDateTime;
 import java.util.Map;
